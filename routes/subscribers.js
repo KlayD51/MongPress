@@ -34,13 +34,32 @@ router.post('/' , async (req, res) => {
 })
 
 //Update one 
-router.patch('/:id' ,(req, res) => {
-    
+//condition checks if thats the name and if not changes and saves to db
+router.patch('/:id' ,getSubscriber, async(req, res) => {
+    if(req.body.name != null){
+        res.subscriber.name = req.body.name;
+    }
+    if(req.body.subscribedToChannel != null){
+        res.subscriber.subscribedToChannel = req.body.subscribedToChannel;
+    }
+    try{
+        const updatedSubscriber = await res.subscriber.save();
+        res.json(updatedSubscriber);
+    } catch {
+        res.status(400).json({ message: err.message })
+
+    }
 })
 
 //Delete one 
-router.post('/:id' ,(req, res) => {
-    
+router.post('/:id' , getSubscriber, async(req, res) => {
+    try{
+        await res.subscriber.remove;
+        res.json({message: 'Successfully deleted sub'})
+
+    } catch (err) {
+        res.status(500).json({message : err.message})
+    }
 })
 
 //middleware function
